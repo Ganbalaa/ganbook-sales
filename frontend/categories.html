@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!-- ==========================================================================
+         APLIKASI GANBOOK SALES - TOKO ONLINE KOMIK FISIK
+         Halaman: Manajemen Kategori & Genre Komik (Admin Categories Page)
+         Deskripsi: Mengelola pengelompokan tipe komik (Manga, Manhwa, Manhua) dan genre cerita.
+         ========================================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kategori & Genre Komik - GanBook Sales</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Utama GanBook Sales -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo-badge"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <h2 style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">GANBOOK</h2>
+                    <span style="font-size: 0.72rem; color: #93c5fd; text-transform: uppercase;">Admin Toko Komik</span>
+                </div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-category">Menu Administrasi</li>
+                <li class="menu-item">
+                    <a href="dashboard.html"><i class="fas fa-chart-pie"></i> <span>Dashboard Utama</span></a>
+                </li>
+                <li class="menu-item">
+                    <a href="books.html"><i class="fas fa-book"></i> <span>Katalog Komik</span></a>
+                </li>
+                <li class="menu-item active">
+                    <a href="categories.html"><i class="fas fa-tags"></i> <span>Kategori & Genre</span></a>
+                </li>
+
+                <li class="menu-category">Transaksi & Penjualan</li>
+                <li class="menu-item">
+                    <a href="sales.html"><i class="fas fa-receipt"></i> <span>Manajemen Penjualan</span></a>
+                </li>
+
+                <li class="menu-category">Pengguna & Toko</li>
+                <li class="menu-item">
+                    <a href="users.html"><i class="fas fa-users"></i> <span>Daftar Pengguna</span></a>
+                </li>
+                <li class="menu-item">
+                    <a href="index.html" target="_blank"><i class="fas fa-store"></i> <span>Lihat Toko Online</span></a>
+                </li>
+            </ul>
+
+            <div style="padding: 16px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <button type="button" id="btnAdminLogout" class="btn btn-danger btn-sm" style="width: 100%;">
+                    <i class="fas fa-sign-out-alt"></i> Keluar
+                </button>
+            </div>
+        </aside>
+
+        <!-- KONTEN UTAMA -->
+        <div class="main-wrapper">
+            <header class="navbar">
+                <div>
+                    <h1 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary);">Manajemen Kategori & Genre</h1>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary);">Kelola tipe asal komik (Manga, Manhwa, Manhua) dan kelompok genre</p>
+                </div>
+            </header>
+
+            <main class="content-area">
+                <div class="card" style="padding: 18px; margin-bottom: 20px;">
+                    <button type="button" id="btnOpenAddCategory" class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i> Tambah Kategori / Genre Baru
+                    </button>
+                </div>
+
+                <div class="card" style="padding: 24px;">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">No</th>
+                                    <th>Nama Kategori</th>
+                                    <th>Tipe Klasifikasi</th>
+                                    <th>Deskripsi</th>
+                                    <th>Jumlah Komik</th>
+                                    <th style="width: 140px;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminCategoriesTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 25px;">Memuat data kategori...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL FORMULIR KATEGORI -->
+    <div id="categoryModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 id="modalCategoryTitle">Tambah Kategori / Genre Baru</h3>
+                <button type="button" class="modal-close" onclick="document.getElementById('categoryModal').classList.remove('active')">&times;</button>
+            </div>
+            <form id="categoryForm">
+                <div class="modal-body">
+                    <input type="hidden" id="catId">
+
+                    <div class="form-group">
+                        <label for="catName" class="form-label">Nama Kategori / Genre <span style="color: var(--danger-color);">*</span></label>
+                        <input type="text" id="catName" class="form-control" placeholder="Contoh: Manga atau Aksi" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="catType" class="form-label">Klasifikasi</label>
+                        <select id="catType" class="form-control">
+                            <option value="genre">Genre Cerita</option>
+                            <option value="origin">Tipe Asal (Manga/Manhwa/Manhua)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="catDescription" class="form-label">Deskripsi Singkat</label>
+                        <textarea id="catDescription" class="form-control" rows="3" placeholder="Keterangan singkat kategori..."></textarea>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="padding: 14px 20px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border-color); background: #f8fafc;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('categoryModal').classList.remove('active')">Batal</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Kategori</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script Modul JavaScript -->
+    <script type="module">
+        // ==========================================
+        // BAGIAN 1: INISIALISASI HALAMAN MANAJEMEN KATEGORI
+        // Memeriksa hak akses admin, memasang tombol logout, dan mendaftarkan event listener.
+        // ==========================================
+        import { apiRequest, requireRole, clearAuthSession } from './js/script.js';
+
+        let categoryList = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!requireRole(['admin'])) return;
+
+            document.getElementById('btnAdminLogout')?.addEventListener('click', async () => {
+                if (confirm('Keluar dari sesi Administrator?')) {
+                    try { await apiRequest('/logout', 'POST'); } catch (e) {}
+                    clearAuthSession();
+                    window.location.href = 'login.html';
+                }
+            });
+
+            await loadCategoriesTable();
+
+            document.getElementById('btnOpenAddCategory')?.addEventListener('click', () => {
+                document.getElementById('categoryForm').reset();
+                document.getElementById('catId').value = '';
+                document.getElementById('modalCategoryTitle').textContent = 'Tambah Kategori / Genre Baru';
+                document.getElementById('categoryModal').classList.add('active');
+            });
+
+            document.getElementById('categoryForm')?.addEventListener('submit', handleSaveCategory);
+        });
+
+        // ==========================================
+        // BAGIAN 2: MEMUAT TABEL DATA KATEGORI
+        // Mengambil daftar kategori dari API Laravel dan merender baris tabel beserta jumlah buku terkait.
+        // ==========================================
+        async function loadCategoriesTable() {
+            const tableBody = document.getElementById('adminCategoriesTableBody');
+            if (!tableBody) return;
+
+            const res = await apiRequest('/categories');
+            if (res.ok && res.data.success) {
+                categoryList = res.data.data;
+                tableBody.innerHTML = categoryList.map((cat, idx) => `
+                    <tr>
+                        <td>${idx + 1}</td>
+                        <td><strong>${cat.name}</strong></td>
+                        <td><span class="badge ${cat.type === 'origin' ? 'badge-info' : 'badge-warning'}">${cat.type === 'origin' ? 'Tipe Asal' : 'Genre'}</span></td>
+                        <td>${cat.description || '-'}</td>
+                        <td><span class="badge badge-success">${cat.books_count ?? 0} judul</span></td>
+                        <td>
+                            <div style="display: flex; gap: 6px;">
+                                <button class="btn btn-secondary btn-sm" onclick="window.editCategory(${cat.id})"><i class="fas fa-edit"></i> Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="window.deleteCategory(${cat.id}, '${cat.name}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // ==========================================
+        // BAGIAN 3: FORMULIR EDIT KATEGORI
+        // Membuka modal dan mengisi nilai input sesuai kategori yang dipilih.
+        // ==========================================
+        window.editCategory = (id) => {
+            const cat = categoryList.find(x => x.id === id);
+            if (!cat) return;
+
+            document.getElementById('catId').value = cat.id;
+            document.getElementById('catName').value = cat.name;
+            document.getElementById('catType').value = cat.type || 'genre';
+            document.getElementById('catDescription').value = cat.description || '';
+            document.getElementById('modalCategoryTitle').textContent = 'Edit Kategori';
+            document.getElementById('categoryModal').classList.add('active');
+        };
+
+        // ==========================================
+        // BAGIAN 4: PROSES SIMPAN DATA KATEGORI
+        // Mengirimkan permintaan POST (tambah) atau PUT (perbarui) ke endpoint /categories.
+        // ==========================================
+        async function handleSaveCategory(e) {
+            e.preventDefault();
+            const id = document.getElementById('catId').value;
+            const payload = {
+                name: document.getElementById('catName').value.trim(),
+                type: document.getElementById('catType').value,
+                description: document.getElementById('catDescription').value.trim(),
+            };
+
+            let res;
+            if (id) {
+                res = await apiRequest(`/categories/${id}`, 'PUT', payload);
+            } else {
+                res = await apiRequest('/categories', 'POST', payload);
+            }
+
+            if (res.ok && res.data.success) {
+                document.getElementById('categoryModal').classList.remove('active');
+                await loadCategoriesTable();
+                alert(res.data.message || 'Kategori berhasil disimpan!');
+            } else {
+                alert(res.data?.message || 'Gagal menyimpan kategori.');
+            }
+        }
+
+        // ==========================================
+        // BAGIAN 5: PROSES HAPUS KATEGORI
+        // Menghapus data kategori melalui endpoint DELETE /categories/{id}.
+        // ==========================================
+        window.deleteCategory = async (id, name) => {
+            if (!confirm(`Hapus kategori "${name}"?`)) return;
+            const res = await apiRequest(`/categories/${id}`, 'DELETE');
+            if (res.ok && res.data.success) {
+                await loadCategoriesTable();
+                alert(res.data.message || 'Kategori berhasil dihapus!');
+            } else {
+                alert(res.data?.message || 'Gagal menghapus kategori.');
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!-- ==========================================================================
+         APLIKASI GANBOOK SALES - TOKO ONLINE KOMIK FISIK
+         Halaman: Dashboard Administrator
+         Deskripsi: Ikhtisar statistik operasional toko komik: total komik, kategori,
+                    pelanggan terdaftar, transaksi, omzet pendapatan, dan distribusi tipe.
+         ========================================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - GanBook Sales</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Utama GanBook Sales -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- SIDEBAR (Navigasi Kiri Admin) -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo-badge"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <h2 style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">GANBOOK</h2>
+                    <span style="font-size: 0.72rem; color: #93c5fd; text-transform: uppercase;">Admin Toko Komik</span>
+                </div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-category">Menu Administrasi</li>
+                <li class="menu-item active">
+                    <a href="dashboard.html"><i class="fas fa-chart-pie"></i> <span>Dashboard Utama</span></a>
+                </li>
+                <li class="menu-item">
+                    <a href="books.html"><i class="fas fa-book"></i> <span>Katalog Komik</span></a>
+                </li>
+                <li class="menu-item">
+                    <a href="categories.html"><i class="fas fa-tags"></i> <span>Kategori & Genre</span></a>
+                </li>
+
+                <li class="menu-category">Transaksi & Penjualan</li>
+                <li class="menu-item">
+                    <a href="sales.html"><i class="fas fa-receipt"></i> <span>Manajemen Penjualan</span></a>
+                </li>
+
+                <li class="menu-category">Pengguna & Toko</li>
+                <li class="menu-item">
+                    <a href="users.html"><i class="fas fa-users"></i> <span>Daftar Pengguna</span></a>
+                </li>
+                <li class="menu-item">
+                    <a href="index.html" target="_blank"><i class="fas fa-store"></i> <span>Lihat Toko Online</span></a>
+                </li>
+            </ul>
+
+            <div style="padding: 16px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <button type="button" id="btnAdminLogout" class="btn btn-danger btn-sm" style="width: 100%;">
+                    <i class="fas fa-sign-out-alt"></i> Keluar Sesi
+                </button>
+            </div>
+        </aside>
+
+        <!-- KONTEN UTAMA DASHBOARD -->
+        <div class="main-wrapper">
+            <header class="navbar">
+                <div>
+                    <h1 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary);">Dashboard Administrator</h1>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary);">Pantau data inventaris komik, pelanggan, dan transaksi secara real-time</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="badge badge-success" style="padding: 6px 12px; font-size: 0.8rem;">
+                        <i class="fas fa-user-shield"></i> <span id="adminNameDisplay">Administrator</span>
+                    </span>
+                </div>
+            </header>
+
+            <main class="content-area">
+                <!-- 5 KARTU STATISTIK METRIK -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div>
+                            <p style="font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Total Komik</p>
+                            <h3 id="statTotalComics" style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin-top: 4px;">0</h3>
+                        </div>
+                        <div class="stat-icon blue"><i class="fas fa-book"></i></div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div>
+                            <p style="font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Kategori & Genre</p>
+                            <h3 id="statTotalCategories" style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin-top: 4px;">0</h3>
+                        </div>
+                        <div class="stat-icon purple"><i class="fas fa-tags"></i></div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div>
+                            <p style="font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Pelanggan</p>
+                            <h3 id="statTotalCustomers" style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin-top: 4px;">0</h3>
+                        </div>
+                        <div class="stat-icon orange"><i class="fas fa-user-friends"></i></div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div>
+                            <p style="font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Total Transaksi</p>
+                            <h3 id="statTotalSales" style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin-top: 4px;">0</h3>
+                        </div>
+                        <div class="stat-icon blue"><i class="fas fa-shopping-bag"></i></div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div>
+                            <p style="font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Total Omzet</p>
+                            <h3 id="statTotalRevenue" style="font-size: 1.5rem; font-weight: 800; color: var(--success-color); margin-top: 4px;">Rp 0</h3>
+                        </div>
+                        <div class="stat-icon green"><i class="fas fa-money-bill-wave"></i></div>
+                    </div>
+                </div>
+
+                <!-- DISTRIBUSI KOMIK (MANGA, MANHWA, MANHUA) -->
+                <div class="card" style="padding: 20px; margin-bottom: 25px;">
+                    <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 14px;"><i class="fas fa-layer-group"></i> Distribusi Tipe Komik di Toko</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                        <div style="background: #e0f2fe; padding: 16px; border-radius: 8px; border-left: 4px solid var(--manga-color);">
+                            <div style="font-size: 0.85rem; color: #0369a1; font-weight: 700;">MANGA JEPANG</div>
+                            <div id="statMangaCount" style="font-size: 1.6rem; font-weight: 800; color: var(--manga-color);">0 Judul</div>
+                        </div>
+                        <div style="background: #f3e8ff; padding: 16px; border-radius: 8px; border-left: 4px solid var(--manhwa-color);">
+                            <div style="font-size: 0.85rem; color: #6b21a8; font-weight: 700;">MANHWA KOREA</div>
+                            <div id="statManhwaCount" style="font-size: 1.6rem; font-weight: 800; color: var(--manhwa-color);">0 Judul</div>
+                        </div>
+                        <div style="background: #fee2e2; padding: 16px; border-radius: 8px; border-left: 4px solid var(--manhua-color);">
+                            <div style="font-size: 0.85rem; color: #991b1b; font-weight: 700;">MANHUA CHINA</div>
+                            <div id="statManhuaCount" style="font-size: 1.6rem; font-weight: 800; color: var(--manhua-color);">0 Judul</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABEL TRANSAKSI TERBARU -->
+                <div class="card" style="padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                        <h3 style="font-size: 1.15rem; font-weight: 700;"><i class="fas fa-history"></i> Transaksi Penjualan Terbaru</h3>
+                        <a href="sales.html" class="btn btn-secondary btn-sm"><i class="fas fa-list"></i> Lihat Semua Transaksi</a>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>No. Faktur</th>
+                                    <th>Nama Pembeli</th>
+                                    <th>Waktu Transaksi</th>
+                                    <th>Volume Komik</th>
+                                    <th>Total Harga</th>
+                                    <th>Metode Bayar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminRecentSalesTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 20px;">Memuat transaksi...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Script Modul JavaScript -->
+    <script type="module">
+        // ==========================================
+        // BAGIAN 1: INISIALISASI DASHBOARD ADMINISTRATOR
+        // Memeriksa autentikasi peran Admin dan memuat metrik ringkasan penjualan, buku, serta pengguna.
+        // ==========================================
+        import { apiRequest, formatRupiah, formatDate, requireRole, clearAuthSession, getAuthUser } from './js/script.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Hanya Administrator yang dapat mengakses halaman ini
+            if (!requireRole(['admin'])) return;
+
+            const user = getAuthUser();
+            if (user) document.getElementById('adminNameDisplay').textContent = user.name;
+
+            // Tombol Logout Admin
+            document.getElementById('btnAdminLogout')?.addEventListener('click', async () => {
+                if (confirm('Keluar dari sesi Administrator?')) {
+                    try { await apiRequest('/logout', 'POST'); } catch (e) {}
+                    clearAuthSession();
+                    window.location.href = 'login.html';
+                }
+            });
+
+            // Ambil data statistik dari backend
+            const res = await apiRequest('/dashboard/admin');
+            if (res.ok && res.data.success) {
+                const d = res.data.data;
+                document.getElementById('statTotalComics').textContent = d.total_comics ?? 0;
+                document.getElementById('statTotalCategories').textContent = d.total_categories ?? 0;
+                document.getElementById('statTotalCustomers').textContent = d.total_customers ?? 0;
+                document.getElementById('statTotalSales').textContent = d.total_sales ?? 0;
+                document.getElementById('statTotalRevenue').textContent = formatRupiah(d.total_revenue ?? 0);
+
+                if (d.comics_by_type) {
+                    document.getElementById('statMangaCount').textContent = `${d.comics_by_type.manga} Judul`;
+                    document.getElementById('statManhwaCount').textContent = `${d.comics_by_type.manhwa} Judul`;
+                    document.getElementById('statManhuaCount').textContent = `${d.comics_by_type.manhua} Judul`;
+                }
+
+                // Render tabel transaksi
+                renderRecentSalesTable(d.recent_sales || []);
+            }
+        });
+
+        // ==========================================
+        // BAGIAN 2: MERENDER TABEL TRANSAKSI TERBARU
+        // Menampilkan daftar pesanan terkini yang masuk ke toko online komik.
+        // ==========================================
+        function renderRecentSalesTable(sales) {
+            const tableBody = document.getElementById('adminRecentSalesTableBody');
+            if (!tableBody) return;
+
+            if (sales.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">Belum ada riwayat transaksi penjualan.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = sales.map(s => `
+                <tr>
+                    <td><strong>#${s.invoice_number}</strong></td>
+                    <td>${s.customer_name || 'Pelanggan Umum'}</td>
+                    <td>${formatDate(s.sale_date)}</td>
+                    <td><span class="badge badge-info">${s.total_items} komik</span></td>
+                    <td><strong>${formatRupiah(s.total_price)}</strong></td>
+                    <td><span class="badge badge-success">${(s.payment_method || 'Tunai').toUpperCase()}</span></td>
+                </tr>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!-- ==========================================================================
+         APLIKASI GANBOOK SALES - TOKO ONLINE KOMIK FISIK
+         Halaman: Masuk Sistem (Login 2 Role: Administrator & Customer)
+         Deskripsi: Formulir autentikasi pengguna dengan kredensial email & password
+                    serta kredensial demo untuk pengujian asesmen BNSP.
+         ========================================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - GanBook Sales</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Utama GanBook Sales -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px;">
+
+    <div style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25); width: 100%; max-width: 460px; overflow: hidden;">
+        <!-- Header Kartu Login -->
+        <div style="background-color: #f8fafc; padding: 30px; text-align: center; border-bottom: 1px solid var(--border-color);">
+            <div style="width: 58px; height: 58px; background: linear-gradient(135deg, var(--primary-color), #3b82f6); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #ffffff; margin: 0 auto 12px; box-shadow: 0 6px 14px rgba(37, 99, 235, 0.3);">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-primary);">GANBOOK SALES</h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">Toko Komik Fisik Online - Masuk ke Akun</p>
+        </div>
+
+        <!-- Konten Form Login -->
+        <div style="padding: 28px;">
+            <!-- Alert Pesan Error / Sukses -->
+            <div id="loginAlert" class="alert" style="display: none;"></div>
+
+            <!-- Petunjuk Akun Pengujian 2 Role Utama (Untuk Penguji Asesmen BNSP) -->
+            <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px; margin-bottom: 20px; font-size: 0.82rem; color: #1e40af;">
+                <strong style="display: block; margin-bottom: 6px;"><i class="fas fa-key"></i> Kredensial Pengujian (Demo BNSP):</strong>
+                <div style="display: grid; gap: 6px;">
+                    <div>👑 <b>Admin:</b> admin@ganbook.test / password123</div>
+                    <div>🛒 <b>Customer:</b> customer@ganbook.test / password123</div>
+                </div>
+            </div>
+
+            <!-- Formulir Login -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label"><i class="fas fa-envelope"></i> Alamat Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="nama@email.com" required value="admin@ganbook.test">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label"><i class="fas fa-lock"></i> Kata Sandi</label>
+                    <input type="password" id="password" class="form-control" placeholder="Masukkan kata sandi..." required value="password123">
+                </div>
+
+                <button type="submit" id="btnSubmitLogin" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 8px; font-size: 0.95rem;">
+                    <i class="fas fa-sign-in-alt"></i> Masuk Sekarang
+                </button>
+            </form>
+
+            <div style="margin-top: 20px; text-align: center; font-size: 0.88rem; color: var(--text-secondary);">
+                Belum memiliki akun pelanggan? <a href="register.html" style="font-weight: 700;">Daftar di sini</a>
+            </div>
+
+            <div style="margin-top: 15px; text-align: center;">
+                <a href="index.html" style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-arrow-left"></i> Kembali ke Beranda Toko</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Modul JavaScript -->
+    <script type="module">
+        import { initLoginForm } from './js/auth.js';
+        document.addEventListener('DOMContentLoaded', initLoginForm);
+    </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!-- ==========================================================================
+         APLIKASI GANBOOK SALES - TOKO ONLINE KOMIK FISIK
+         Halaman: Katalog Lengkap (Catalog Page)
+         Deskripsi: Menampilkan seluruh katalog komik dari database MySQL dengan filter
+                    tipe komik, genre, pencarian judul/penulis, dan pengurutan harga.
+         ========================================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Komik - GanBook Sales</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Utama GanBook Sales -->
+  <script type="module" crossorigin src="/assets/catalog-kbmfQzBN.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/script-Cjw_6am7.js">
+  <link rel="modulepreload" crossorigin href="/assets/products-DadudV2F.js">
+  <link rel="stylesheet" crossorigin href="/assets/script-DDq6NZ6v.css">
+</head>
+<body>
+
+    <!-- 1. HEADER & NAVBAR STOREFRONT -->
+    <header class="store-header">
+        <div class="store-nav-container">
+            <a href="index.html" class="store-logo">
+                <div class="logo-badge"><i class="fas fa-book-open"></i></div>
+                <span>GANBOOK SALES</span>
+            </a>
+
+            <ul class="store-nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> Beranda</a></li>
+                <li><a href="catalog.html" class="active"><i class="fas fa-th-large"></i> Katalog Komik</a></li>
+                <li><a href="catalog.html?type=Manga"><i class="fas fa-torii-gate"></i> Manga</a></li>
+                <li><a href="catalog.html?type=Manhwa"><i class="fas fa-bolt"></i> Manhwa</a></li>
+                <li><a href="catalog.html?type=Manhua"><i class="fas fa-dragon"></i> Manhua</a></li>
+            </ul>
+
+            <div class="store-nav-actions">
+                <a href="cart.html" class="nav-cart-btn" title="Keranjang Belanja">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="navCartCount" class="cart-count-badge" style="display: none;">0</span>
+                </a>
+
+                <div id="storeUserNav">
+                    <a href="login.html" class="btn btn-outline btn-sm"><i class="fas fa-sign-in-alt"></i> Masuk</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. HEADER HALAMAN KATALOG -->
+    <div style="background-color: #ffffff; border-bottom: 1px solid var(--border-color); padding: 30px 20px;">
+        <div style="max-width: 1240px; margin: 0 auto;">
+            <h1 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary);">
+                <i class="fas fa-book" style="color: var(--primary-color);"></i> Katalog Seluruh Komik
+            </h1>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 6px;">
+                Temukan dan beli komik fisik Manga, Manhwa, dan Manhua original berlisensi resmi.
+            </p>
+        </div>
+    </div>
+
+    <!-- 3. KONTEN KATALOG & FILTER -->
+    <main class="section-wrapper" style="margin-top: 30px;">
+        <!-- BILAH PENCARIAN & FILTER -->
+        <div class="card" style="padding: 20px; margin-bottom: 25px;">
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 14px; align-items: center;">
+                <!-- Input Pencarian -->
+                <div style="position: relative;">
+                    <i class="fas fa-search" style="position: absolute; left: 14px; top: 13px; color: var(--text-muted);"></i>
+                    <input type="text" id="catalogSearch" class="form-control" style="padding-left: 38px;" placeholder="Cari judul komik, penulis, penerbit...">
+                </div>
+
+                <!-- Filter Tipe Komik -->
+                <select id="catalogTypeFilter" class="form-control">
+                    <option value="">Semua Tipe Komik</option>
+                    <option value="Manga">Manga (Jepang)</option>
+                    <option value="Manhwa">Manhwa (Korea)</option>
+                    <option value="Manhua">Manhua (China)</option>
+                </select>
+
+                <!-- Filter Kategori / Genre -->
+                <select id="catalogCategoryFilter" class="form-control">
+                    <option value="">Memuat Kategori...</option>
+                </select>
+
+                <!-- Pengurutan Harga -->
+                <select id="catalogSort" class="form-control">
+                    <option value="latest">Urutan: Terbaru</option>
+                    <option value="price_asc">Harga: Terendah ke Tertinggi</option>
+                    <option value="price_desc">Harga: Tertinggi ke Terendah</option>
+                    <option value="title_asc">Judul: A - Z</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- JUMLAH HASIL -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+            <div id="catalogResultCount" style="font-size: 0.9rem; font-weight: 600; color: var(--text-secondary);">
+                Memuat komik...
+            </div>
+        </div>
+
+        <!-- GRID KARTU PRODUK KOMIK -->
+        <div id="catalogGrid" class="comics-grid">
+            <!-- Dirender secara dinamis oleh products.js -->
+        </div>
+    </main>
+
+    <!-- 4. FOOTER STOREFRONT -->
+    <footer class="store-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="store-logo" style="color: #ffffff; margin-bottom: 14px;">
+                    <div class="logo-badge"><i class="fas fa-book-open"></i></div>
+                    <span>GANBOOK SALES</span>
+                </div>
+                <p style="font-size: 0.88rem; line-height: 1.6; color: #94a3b8;">
+                    Toko komik fisik online terpercaya untuk penggemar Manga, Manhwa, dan Manhua di seluruh Indonesia.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Kategori Komik</h4>
+                <ul class="footer-links">
+                    <li><a href="catalog.html?type=Manga">Manga</a></li>
+                    <li><a href="catalog.html?type=Manhwa">Manhwa</a></li>
+                    <li><a href="catalog.html?type=Manhua">Manhua</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Navigasi</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">Beranda</a></li>
+                    <li><a href="cart.html">Keranjang</a></li>
+                    <li><a href="orders.html">Riwayat Pesanan</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Bantuan</h4>
+                <ul class="footer-links" style="color: #94a3b8;">
+                    <li><i class="fas fa-phone-alt"></i> +62 812-3456-7890</li>
+                    <li><i class="fas fa-envelope"></i> info@ganbook.test</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 GANBOOK SALES. Seluruh hak cipta dilindungi undang-undang.</p>
+        </div>
+    </footer>
+
+    <!-- Script Modul JavaScript -->
+</body>
+</html>

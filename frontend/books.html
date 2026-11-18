@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!-- ==========================================================================
+         APLIKASI GANBOOK SALES - TOKO ONLINE KOMIK FISIK
+         Halaman: Manajemen Produk Komik (Admin Books/Comics Page)
+         Deskripsi: Operasi CRUD inventaris komik fisik: tambah komik baru, edit informasi,
+                    atur harga & persediaan stok, serta tanda komik populer/rekomendasi.
+         ========================================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Komik - GanBook Sales</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Utama GanBook Sales -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo-badge"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <h2 style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">GANBOOK</h2>
+                    <span style="font-size: 0.72rem; color: #93c5fd; text-transform: uppercase;">Admin Toko Komik</span>
+                </div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-category">Menu Administrasi</li>
+                <li class="menu-item">
+                    <a href="dashboard.html"><i class="fas fa-chart-pie"></i> <span>Dashboard Utama</span></a>
+                </li>
+                <li class="menu-item active">
+                    <a href="books.html"><i class="fas fa-book"></i> <span>Katalog Komik</span></a>
+                </li>
+                <li class="menu-item">
+                    <a href="categories.html"><i class="fas fa-tags"></i> <span>Kategori & Genre</span></a>
+                </li>
+
+                <li class="menu-category">Transaksi & Penjualan</li>
+                <li class="menu-item">
+                    <a href="sales.html"><i class="fas fa-receipt"></i> <span>Manajemen Penjualan</span></a>
+                </li>
+
+                <li class="menu-category">Pengguna & Toko</li>
+                <li class="menu-item">
+                    <a href="users.html"><i class="fas fa-users"></i> <span>Daftar Pengguna</span></a>
+                </li>
+                <li class="menu-item">
+                    <a href="index.html" target="_blank"><i class="fas fa-store"></i> <span>Lihat Toko Online</span></a>
+                </li>
+            </ul>
+
+            <div style="padding: 16px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <button type="button" id="btnAdminLogout" class="btn btn-danger btn-sm" style="width: 100%;">
+                    <i class="fas fa-sign-out-alt"></i> Keluar
+                </button>
+            </div>
+        </aside>
+
+        <!-- KONTEN UTAMA -->
+        <div class="main-wrapper">
+            <header class="navbar">
+                <div>
+                    <h1 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary);">Manajemen Produk Komik</h1>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary);">Kelola judul Manga, Manhwa, Manhua, harga, dan persediaan stok toko</p>
+                </div>
+            </header>
+
+            <main class="content-area">
+                <!-- BILAH AKSI & PENCARIAN -->
+                <div class="card" style="padding: 18px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <button type="button" id="btnOpenAddModal" class="btn btn-primary">
+                                <i class="fas fa-plus-circle"></i> Tambah Komik Baru
+                            </button>
+
+                            <select id="adminTypeFilter" class="form-control" style="width: 180px;">
+                                <option value="">Semua Tipe</option>
+                                <option value="Manga">Manga</option>
+                                <option value="Manhwa">Manhwa</option>
+                                <option value="Manhua">Manhua</option>
+                            </select>
+                        </div>
+
+                        <div style="width: 280px;">
+                            <input type="text" id="adminComicSearch" class="form-control" placeholder="Cari judul komik...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABEL DATA KOMIK -->
+                <div class="card" style="padding: 24px;">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;">No</th>
+                                    <th>Sampul</th>
+                                    <th>Judul & Tipe</th>
+                                    <th>Penulis / Komikus</th>
+                                    <th>Genre</th>
+                                    <th>Harga</th>
+                                    <th>Stok</th>
+                                    <th style="width: 140px;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminComicsTableBody">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; padding: 25px;">Memuat data komik...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL FORMULIR TAMBAH / EDIT KOMIK -->
+    <div id="comicModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 650px;">
+            <div class="modal-header">
+                <h3 id="modalComicTitle">Tambah Komik Baru</h3>
+                <button type="button" class="modal-close" onclick="document.getElementById('comicModal').classList.remove('active')">&times;</button>
+            </div>
+            <form id="comicForm">
+                <div class="modal-body">
+                    <input type="hidden" id="comicId">
+
+                    <div class="form-group">
+                        <label for="fTitle" class="form-label">Judul Komik & Volume <span style="color: var(--danger-color);">*</span></label>
+                        <input type="text" id="fTitle" class="form-control" placeholder="Contoh: One Piece Vol. 109" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form-group">
+                            <label for="fType" class="form-label">Tipe Komik <span style="color: var(--danger-color);">*</span></label>
+                            <select id="fType" class="form-control" required>
+                                <option value="Manga">Manga (Jepang)</option>
+                                <option value="Manhwa">Manhwa (Korea)</option>
+                                <option value="Manhua">Manhua (China)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="fCategory" class="form-label">Kategori Utama <span style="color: var(--danger-color);">*</span></label>
+                            <select id="fCategory" class="form-control" required></select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div class="form-group">
+                            <label for="fAuthor" class="form-label">Penulis / Komikus <span style="color: var(--danger-color);">*</span></label>
+                            <input type="text" id="fAuthor" class="form-control" placeholder="Contoh: Eiichiro Oda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fPublisher" class="form-label">Penerbit <span style="color: var(--danger-color);">*</span></label>
+                            <input type="text" id="fPublisher" class="form-control" placeholder="Contoh: Elex Media Komputindo" required>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 14px;">
+                        <div class="form-group">
+                            <label for="fGenre" class="form-label">Genre Komik <span style="color: var(--danger-color);">*</span></label>
+                            <input type="text" id="fGenre" class="form-control" placeholder="Aksi, Fantasi" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fYear" class="form-label">Tahun Rilis <span style="color: var(--danger-color);">*</span></label>
+                            <input type="number" id="fYear" class="form-control" value="2024" min="1950" max="2030" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fPrice" class="form-label">Harga (Rp) <span style="color: var(--danger-color);">*</span></label>
+                            <input type="number" id="fPrice" class="form-control" min="0" step="500" placeholder="45000" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fStock" class="form-label">Stok Fisik <span style="color: var(--danger-color);">*</span></label>
+                            <input type="number" id="fStock" class="form-control" min="0" placeholder="25" required>
+                        </div>
+                    </div>
+
+                    <!-- AREA FITUR UPLOAD COVER KOMIK DARI PERANGKAT -->
+                    <div class="form-group" style="margin-top: 5px;">
+                        <label class="form-label"><i class="fas fa-image" style="color: var(--primary-color);"></i> Cover Komik</label>
+                        
+                        <div style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 16px; background: #f8fafc; transition: all 0.2s ease;">
+                            <!-- Input File Gambar (Tersembunyi, Dikontrol lewat tombol) -->
+                            <input type="file" id="fCoverFile" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" style="display: none;">
+
+                            <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                                <!-- Area Preview Gambar Cover -->
+                                <div id="coverPreviewBox" style="width: 105px; height: 145px; border-radius: 8px; border: 1px solid #cbd5e1; background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); flex-shrink: 0;">
+                                    <img id="coverPreviewImg" src="assets/covers/one-piece.svg" alt="Preview Cover Komik" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+
+                                <!-- Kontrol Tombol & Keterangan File -->
+                                <div style="flex: 1; min-width: 220px;">
+                                    <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
+                                        <button type="button" id="btnChooseCover" class="btn btn-primary btn-sm" style="padding: 9px 18px; font-weight: 700;">
+                                            <i class="fas fa-folder-open"></i> Pilih Gambar
+                                        </button>
+                                        <button type="button" id="btnCancelCover" class="btn btn-secondary btn-sm" style="display: none; padding: 9px 14px; color: var(--danger-color); font-weight: 700;">
+                                            <i class="fas fa-undo"></i> Batal Ganti
+                                        </button>
+                                    </div>
+
+                                    <div id="coverFileName" style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; word-break: break-all;">
+                                        Belum ada gambar baru dipilih
+                                    </div>
+
+                                    <div style="font-size: 0.78rem; color: #64748b; line-height: 1.4;">
+                                        <i class="fas fa-info-circle"></i> Format yang diperbolehkan: <strong>JPG, JPEG, PNG, WEBP</strong><br>
+                                        <i class="fas fa-weight-hanging"></i> Batas ukuran file maksimal: <strong>2 MB</strong>
+                                    </div>
+
+                                    <!-- Pesan Validasi Format / Ukuran File Gambar -->
+                                    <div id="coverValidationError" class="alert alert-danger" style="display: none; margin-top: 10px; padding: 8px 12px; font-size: 0.82rem;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fDescription" class="form-label">Sinopsis / Ringkasan Cerita</label>
+                        <textarea id="fDescription" class="form-control" rows="3" placeholder="Sinopsis komik..."></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 20px; margin-top: 10px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem;">
+                            <input type="checkbox" id="fIsPopular" style="width: 18px; height: 18px;">
+                            <span>Tampilkan di Bagian <strong>Komik Terpopuler</strong></span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem;">
+                            <input type="checkbox" id="fIsRecommended" style="width: 18px; height: 18px;">
+                            <span>Tampilkan di Bagian <strong>Rekomendasi Editor</strong></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer" style="padding: 14px 24px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-color); background: #f8fafc;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('comicModal').classList.remove('active')">Batal</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Data Komik</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script Modul JavaScript -->
+    <script type="module">
+        import { apiRequest, formatRupiah, requireRole, clearAuthSession, getCoverUrl } from './js/script.js';
+
+        let adminComicsList = [];
+        let currentComicCoverUrl = 'assets/covers/one-piece.svg';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!requireRole(['admin'])) return;
+
+            document.getElementById('btnAdminLogout')?.addEventListener('click', async () => {
+                if (confirm('Keluar dari sesi Administrator?')) {
+                    try { await apiRequest('/logout', 'POST'); } catch (e) {}
+                    clearAuthSession();
+                    window.location.href = 'login.html';
+                }
+            });
+
+            await loadCategoryOptions();
+            await loadAdminComics();
+
+            // Setup Kontrol Upload Cover Komik
+            setupCoverUploadControls();
+
+            document.getElementById('adminTypeFilter')?.addEventListener('change', loadAdminComics);
+            document.getElementById('adminComicSearch')?.addEventListener('input', loadAdminComics);
+            document.getElementById('btnOpenAddModal')?.addEventListener('click', openAddModal);
+            document.getElementById('comicForm')?.addEventListener('submit', handleSaveComic);
+        });
+
+        // ==========================================
+        // BAGIAN 1: PENGELOLAAN FITUR UPLOAD COVER KOMIK
+        // Memilih file gambar dari laptop/komputer, preview sebelum disimpan, dan validasi max 2 MB.
+        // ==========================================
+        function setupCoverUploadControls() {
+            const btnChoose = document.getElementById('btnChooseCover');
+            const fileInput = document.getElementById('fCoverFile');
+            const btnCancel = document.getElementById('btnCancelCover');
+
+            // Tombol "Pilih Gambar" memicu klik pada input file
+            btnChoose?.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Deteksi perubahan pemilihan file gambar
+            fileInput?.addEventListener('change', (e) => {
+                const file = e.target.files && e.target.files[0];
+                if (!file) return;
+
+                // 1. Validasi Format File Gambar (JPG, JPEG, PNG, WEBP)
+                const allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
+                const allowedExts = /\.(jpe?g|png|webp)$/i;
+
+                if (!allowedMimes.includes(file.type) && !allowedExts.test(file.name)) {
+                    showCoverError('Format file tidak didukung! Harap pilih gambar dengan format JPG, JPEG, PNG, atau WEBP.');
+                    fileInput.value = '';
+                    return;
+                }
+
+                // 2. Validasi Batas Ukuran File (Maksimal 2 MB = 2 * 1024 * 1024 bytes)
+                const maxBytes = 2 * 1024 * 1024;
+                if (file.size > maxBytes) {
+                    const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                    showCoverError(`Ukuran file terlalu besar (${sizeInMB} MB)! Maksimal ukuran cover adalah 2 MB.`);
+                    fileInput.value = '';
+                    return;
+                }
+
+                // File valid: Sembunyikan pesan error
+                hideCoverError();
+
+                // Tampilkan nama file dan ukuran
+                const sizeKb = (file.size / 1024).toFixed(1);
+                document.getElementById('coverFileName').innerHTML = `<i class="fas fa-check-circle" style="color: var(--success-color);"></i> <strong>${file.name}</strong> (${sizeKb} KB)`;
+
+                // Tampilkan Preview Gambar Sebelum Disimpan menggunakan FileReader
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    document.getElementById('coverPreviewImg').src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // Tampilkan opsi tombol "Batal Ganti" jika admin ingin membatalkan sebelum menyimpan
+                btnCancel.style.display = 'inline-flex';
+            });
+
+            // Tombol "Batal Ganti" untuk membatalkan pemilihan file baru
+            btnCancel?.addEventListener('click', () => {
+                fileInput.value = '';
+                document.getElementById('coverPreviewImg').src = currentComicCoverUrl;
+
+                const isEdit = Boolean(document.getElementById('comicId').value);
+                if (isEdit) {
+                    document.getElementById('coverFileName').textContent = 'Menggunakan cover saat ini (Pilih gambar baru untuk mengganti)';
+                } else {
+                    document.getElementById('coverFileName').textContent = 'Belum ada gambar baru dipilih';
+                }
+
+                btnCancel.style.display = 'none';
+                hideCoverError();
+            });
+        }
+
+        function showCoverError(msg) {
+            const errBox = document.getElementById('coverValidationError');
+            if (errBox) {
+                errBox.textContent = msg;
+                errBox.style.display = 'block';
+            }
+        }
+
+        function hideCoverError() {
+            const errBox = document.getElementById('coverValidationError');
+            if (errBox) {
+                errBox.textContent = '';
+                errBox.style.display = 'none';
+            }
+        }
+
+        // ==========================================
+        // BAGIAN 2: KONTROL DATA & TABEL KOMIK
+        // Mengambil opsi kategori dan daftar buku dari backend serta merender tabel data komik.
+        // ==========================================
+        async function loadCategoryOptions() {
+            const select = document.getElementById('fCategory');
+            if (!select) return;
+            const res = await apiRequest('/categories');
+            if (res.ok && res.data.success) {
+                select.innerHTML = res.data.data.map(cat => `<option value="${cat.id}">${cat.name}</option>`).join('');
+            }
+        }
+
+        async function loadAdminComics() {
+            const tableBody = document.getElementById('adminComicsTableBody');
+            if (!tableBody) return;
+
+            const type = document.getElementById('adminTypeFilter')?.value || '';
+            const search = document.getElementById('adminComicSearch')?.value.trim() || '';
+
+            const params = new URLSearchParams();
+            if (type) params.append('comic_type', type);
+            if (search) params.append('search', search);
+
+            const res = await apiRequest(`/books?${params.toString()}`);
+            if (res.ok && res.data.success) {
+                adminComicsList = res.data.data;
+                if (adminComicsList.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 25px;">Data komik tidak ditemukan.</td></tr>`;
+                    return;
+                }
+
+                tableBody.innerHTML = adminComicsList.map((c, idx) => {
+                    const badgeClass = c.comic_type === 'Manga' ? 'badge-manga' : (c.comic_type === 'Manhwa' ? 'badge-manhwa' : 'badge-manhua');
+                    const coverUrl = getCoverUrl(c.cover_url || c.cover_image);
+
+                    return `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td>
+                                <img src="${coverUrl}" alt="${c.title}" style="width: 45px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.08);">
+                            </td>
+                            <td>
+                                <span class="comic-type-badge ${badgeClass}" style="position: static; font-size: 0.65rem; padding: 2px 6px;">${c.comic_type}</span>
+                                <div style="font-weight: 700; margin-top: 3px;">${c.title}</div>
+                                <div class="text-muted" style="font-size: 0.78rem;">${c.publisher} (${c.year})</div>
+                            </td>
+                            <td>${c.author}</td>
+                            <td><span class="badge badge-info" style="font-size: 0.75rem;">${c.genre}</span></td>
+                            <td><strong>${formatRupiah(c.price)}</strong></td>
+                            <td><span class="badge ${c.stock > 0 ? 'badge-success' : 'badge-danger'}">${c.stock} unit</span></td>
+                            <td>
+                                <div style="display: flex; gap: 6px;">
+                                    <button class="btn btn-secondary btn-sm" onclick="window.editComic(${c.id})"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-danger btn-sm" onclick="window.deleteComic(${c.id}, '${c.title}')"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+
+        // ==========================================
+        // BAGIAN 3: FORMULIR TAMBAH KOMIK
+        // Membuka modal tambah baru dan mengosongkan input form serta preview cover.
+        // ==========================================
+        function openAddModal() {
+            const form = document.getElementById('comicForm');
+            form.reset();
+            document.getElementById('comicId').value = '';
+            document.getElementById('modalComicTitle').textContent = 'Tambah Komik Baru';
+            document.getElementById('fYear').value = 2024;
+
+            // Reset kontrol upload gambar
+            currentComicCoverUrl = 'assets/covers/one-piece.svg';
+            document.getElementById('coverPreviewImg').src = currentComicCoverUrl;
+            document.getElementById('fCoverFile').value = '';
+            document.getElementById('coverFileName').textContent = 'Belum ada gambar baru dipilih';
+            document.getElementById('btnCancelCover').style.display = 'none';
+            hideCoverError();
+
+            document.getElementById('comicModal').classList.add('active');
+        }
+
+        // ==========================================
+        // BAGIAN 4: FORMULIR EDIT KOMIK
+        // Mengisi formulir dengan data komik yang dipilih dan menampilkan cover lama sebagai preview awal.
+        // ==========================================
+        window.editComic = (id) => {
+            const comic = adminComicsList.find(x => x.id === id);
+            if (!comic) return;
+
+            document.getElementById('comicId').value = comic.id;
+            document.getElementById('fTitle').value = comic.title;
+            document.getElementById('fType').value = comic.comic_type;
+            document.getElementById('fCategory').value = comic.category_id;
+            document.getElementById('fAuthor').value = comic.author;
+            document.getElementById('fPublisher').value = comic.publisher;
+            document.getElementById('fGenre').value = comic.genre;
+            document.getElementById('fPrice').value = comic.price;
+            document.getElementById('fStock').value = comic.stock;
+            document.getElementById('fYear').value = comic.year;
+            document.getElementById('fDescription').value = comic.description || '';
+            document.getElementById('fIsPopular').checked = Boolean(comic.is_popular);
+            document.getElementById('fIsRecommended').checked = Boolean(comic.is_recommended);
+
+            // Tampilkan cover lama sebagai preview awal
+            currentComicCoverUrl = getCoverUrl(comic.cover_url || comic.cover_image);
+            document.getElementById('coverPreviewImg').src = currentComicCoverUrl;
+            document.getElementById('fCoverFile').value = '';
+            document.getElementById('coverFileName').textContent = 'Menggunakan cover saat ini (Pilih gambar baru untuk mengganti)';
+            document.getElementById('btnCancelCover').style.display = 'none';
+            hideCoverError();
+
+            document.getElementById('modalComicTitle').textContent = 'Edit Data Komik';
+            document.getElementById('comicModal').classList.add('active');
+        };
+
+        // ==========================================
+        // BAGIAN 5: PROSES SIMPAN DATA KOMIK (FORMDATA & MULTIPART)
+        // Mengirim data komik beserta berkas file cover ke API POST/PUT /books di Laravel.
+        // ==========================================
+        async function handleSaveComic(e) {
+            e.preventDefault();
+            const id = document.getElementById('comicId').value;
+
+            // Gunakan FormData untuk mengirim data komik beserta berkas gambar
+            const formData = new FormData();
+            formData.append('title', document.getElementById('fTitle').value.trim());
+            formData.append('comic_type', document.getElementById('fType').value);
+            formData.append('category_id', document.getElementById('fCategory').value);
+            formData.append('author', document.getElementById('fAuthor').value.trim());
+            formData.append('publisher', document.getElementById('fPublisher').value.trim());
+            formData.append('genre', document.getElementById('fGenre').value.trim());
+            formData.append('price', document.getElementById('fPrice').value);
+            formData.append('stock', document.getElementById('fStock').value);
+            formData.append('year', document.getElementById('fYear').value);
+            formData.append('description', document.getElementById('fDescription').value.trim());
+            formData.append('is_popular', document.getElementById('fIsPopular').checked ? '1' : '0');
+            formData.append('is_recommended', document.getElementById('fIsRecommended').checked ? '1' : '0');
+
+            // Lampirkan file cover jika dipilih
+            const fileInput = document.getElementById('fCoverFile');
+            if (fileInput.files && fileInput.files[0]) {
+                formData.append('cover_image', fileInput.files[0]);
+            }
+
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+
+            let res;
+            if (id) {
+                // Untuk edit, gunakan method spoofing PUT via POST agar file upload diproses benar oleh PHP/Laravel
+                formData.append('_method', 'PUT');
+                res = await apiRequest(`/books/${id}`, 'POST', formData);
+            } else {
+                res = await apiRequest('/books', 'POST', formData);
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+
+            if (res.ok && res.data.success) {
+                document.getElementById('comicModal').classList.remove('active');
+                await loadAdminComics();
+                alert(res.data.message || 'Data komik berhasil disimpan!');
+            } else {
+                let errorMsg = res.data?.message || 'Gagal menyimpan data komik.';
+                if (res.data?.errors) {
+                    const errorList = Object.values(res.data.errors).flat().join('\n• ');
+                    errorMsg += `\n\n• ${errorList}`;
+                }
+                alert(errorMsg);
+            }
+        }
+
+        // ==========================================
+        // BAGIAN 6: HAPUS DATA KOMIK
+        // Menghapus rekaman komik dan file gambar cover dari storage server.
+        // ==========================================
+        window.deleteComic = async (id, title) => {
+            if (!confirm(`Hapus komik "${title}" dari katalog? File cover yang terkait juga akan dihapus dari penyimpanan.`)) return;
+            const res = await apiRequest(`/books/${id}`, 'DELETE');
+            if (res.ok && res.data.success) {
+                await loadAdminComics();
+                alert(res.data.message || 'Komik berhasil dihapus!');
+            } else {
+                alert(res.data?.message || 'Gagal menghapus komik.');
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+import{r as s,d as m,a as o,c,f as d,e as i}from"./script-Cjw_6am7.js";document.addEventListener("DOMContentLoaded",async()=>{var e;if(!s(["admin"]))return;const a=m();a&&(document.getElementById("adminNameDisplay").textContent=a.name),(e=document.getElementById("btnAdminLogout"))==null||e.addEventListener("click",async()=>{if(confirm("Keluar dari sesi Administrator?")){try{await o("/logout","POST")}catch{}c(),window.location.href="login.html"}});const n=await o("/dashboard/admin");if(n.ok&&n.data.success){const t=n.data.data;document.getElementById("statTotalComics").textContent=t.total_comics??0,document.getElementById("statTotalCategories").textContent=t.total_categories??0,document.getElementById("statTotalCustomers").textContent=t.total_customers??0,document.getElementById("statTotalSales").textContent=t.total_sales??0,document.getElementById("statTotalRevenue").textContent=d(t.total_revenue??0),t.comics_by_type&&(document.getElementById("statMangaCount").textContent=`${t.comics_by_type.manga} Judul`,document.getElementById("statManhwaCount").textContent=`${t.comics_by_type.manhwa} Judul`,document.getElementById("statManhuaCount").textContent=`${t.comics_by_type.manhua} Judul`),r(t.recent_sales||[])}});function r(a){const n=document.getElementById("adminRecentSalesTableBody");if(n){if(a.length===0){n.innerHTML='<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">Belum ada riwayat transaksi penjualan.</td></tr>';return}n.innerHTML=a.map(e=>`
+                <tr>
+                    <td><strong>#${e.invoice_number}</strong></td>
+                    <td>${e.customer_name||"Pelanggan Umum"}</td>
+                    <td>${i(e.sale_date)}</td>
+                    <td><span class="badge badge-info">${e.total_items} komik</span></td>
+                    <td><strong>${d(e.total_price)}</strong></td>
+                    <td><span class="badge badge-success">${(e.payment_method||"Tunai").toUpperCase()}</span></td>
+                </tr>
+            `).join("")}}

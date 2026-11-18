@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!-- ==========================================================================
+         APLIKASI GANBOOK SALES - TOKO ONLINE KOMIK FISIK
+         Halaman: Beranda Utama (Storefront Homepage)
+         Deskripsi: Menampilkan etalase toko komik, banner promosi, kategori manga/manhwa/manhua,
+                    koleksi komik terbaru, terpopuler, dan rekomendasi pilihan.
+         ========================================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GanBook Sales - Toko Online Komik Fisik (Manga, Manhwa, Manhua)</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Utama GanBook Sales -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- 1. HEADER & NAVBAR STOREFRONT -->
+    <header class="store-header">
+        <div class="store-nav-container">
+            <!-- Brand Logo -->
+            <a href="index.html" class="store-logo">
+                <div class="logo-badge">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <span>GANBOOK SALES</span>
+            </a>
+
+            <!-- Navigasi Menu Pelanggan -->
+            <ul class="store-nav-links">
+                <li><a href="index.html" class="active"><i class="fas fa-home"></i> Beranda</a></li>
+                <li><a href="catalog.html"><i class="fas fa-th-large"></i> Katalog Komik</a></li>
+                <li><a href="catalog.html?type=Manga"><i class="fas fa-torii-gate"></i> Manga</a></li>
+                <li><a href="catalog.html?type=Manhwa"><i class="fas fa-bolt"></i> Manhwa</a></li>
+                <li><a href="catalog.html?type=Manhua"><i class="fas fa-dragon"></i> Manhua</a></li>
+            </ul>
+
+            <!-- Aksi Pengguna: Keranjang & Profil / Login -->
+            <div class="store-nav-actions">
+                <a href="cart.html" class="nav-cart-btn" title="Keranjang Belanja">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="navCartCount" class="cart-count-badge" style="display: none;">0</span>
+                </a>
+
+                <div id="storeUserNav">
+                    <!-- Dirender dinamis oleh script.js: Tombol Masuk/Daftar atau Dropdown User -->
+                    <a href="login.html" class="btn btn-outline btn-sm"><i class="fas fa-sign-in-alt"></i> Masuk</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. HERO SECTION / BANNER UTAMA -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <span class="hero-tag"><i class="fas fa-certificate"></i> Toko Komik Fisik Terlengkap & Resmi</span>
+                <h1 class="hero-title">Koleksi Komik Favoritmu Ada di GanBook Sales</h1>
+                <p class="hero-description">
+                    Pusat belanja komik fisik original terlengkap di Indonesia. Temukan ribuan volume komik Manga Jepang, Manhwa Korea adaptasi Webtoon, dan Manhua China kultivasi dengan kualitas cetakan terbaik dan pengiriman cepat.
+                </p>
+                <div class="hero-btns">
+                    <a href="catalog.html" class="btn btn-primary" style="background: #ffffff; color: var(--primary-color); font-weight: 800; padding: 12px 24px;">
+                        <i class="fas fa-compass"></i> Jelajahi Seluruh Komik
+                    </a>
+                    <a href="#kategori" class="btn btn-outline" style="color: #ffffff; border-color: rgba(255,255,255,0.6); padding: 12px 24px;">
+                        <i class="fas fa-tags"></i> Kategori Komik
+                    </a>
+                </div>
+            </div>
+
+            <!-- Grid Ikon Tipe Komik di Hero -->
+            <div class="hero-badges-grid">
+                <div class="hero-comic-badge-card">
+                    <i class="fas fa-torii-gate" style="color: #67e8f9;"></i>
+                    <h4>MANGA</h4>
+                    <p style="font-size: 0.78rem; opacity: 0.85;">Komik Asli Jepang</p>
+                </div>
+                <div class="hero-comic-badge-card">
+                    <i class="fas fa-bolt" style="color: #c084fc;"></i>
+                    <h4>MANHWA</h4>
+                    <p style="font-size: 0.78rem; opacity: 0.85;">Webtoon Korea</p>
+                </div>
+                <div class="hero-comic-badge-card">
+                    <i class="fas fa-dragon" style="color: #f87171;"></i>
+                    <h4>MANHUA</h4>
+                    <p style="font-size: 0.78rem; opacity: 0.85;">Kultivasi China</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. KATEGORI TIPE KOMIK (BANNER TIGA PILIHAN) -->
+    <section id="kategori" class="categories-banner-section">
+        <div class="type-cards-grid">
+            <a href="catalog.html?type=Manga" class="type-card manga">
+                <div class="type-card-info">
+                    <h3>Manga Jepang</h3>
+                    <p>One Piece, Naruto, Jujutsu Kaisen, Demon Slayer, Frieren</p>
+                </div>
+                <div class="type-card-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+            </a>
+
+            <a href="catalog.html?type=Manhwa" class="type-card manhwa">
+                <div class="type-card-info">
+                    <h3>Manhwa Korea</h3>
+                    <p>Solo Leveling, Lookism, Eleceed, Estate Developer</p>
+                </div>
+                <div class="type-card-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+            </a>
+
+            <a href="catalog.html?type=Manhua" class="type-card manhua">
+                <div class="type-card-info">
+                    <h3>Manhua China</h3>
+                    <p>Tales of Demons and Gods, Apotheosis, BTTH</p>
+                </div>
+                <div class="type-card-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- 4. ETALASE KOMIK TERBARU -->
+    <section class="section-wrapper">
+        <div class="section-header">
+            <h2><i class="fas fa-sparkles" style="color: var(--primary-color);"></i> Rilis Komik Terbaru</h2>
+            <a href="catalog.html?sort=latest" class="btn btn-secondary btn-sm">Lihat Semua <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div id="latestComicsContainer" class="comics-grid">
+            <!-- Dirender secara dinamis oleh products.js -->
+        </div>
+    </section>
+
+    <!-- 5. ETALASE KOMIK TERPOPULER -->
+    <section class="section-wrapper">
+        <div class="section-header">
+            <h2><i class="fas fa-fire" style="color: #ef4444;"></i> Komik Paling Populer (Best Seller)</h2>
+            <a href="catalog.html" class="btn btn-secondary btn-sm">Lihat Semua <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div id="popularComicsContainer" class="comics-grid">
+            <!-- Dirender secara dinamis oleh products.js -->
+        </div>
+    </section>
+
+    <!-- 6. ETALASE REKOMENDASI TOKO -->
+    <section class="section-wrapper">
+        <div class="section-header">
+            <h2><i class="fas fa-thumbs-up" style="color: var(--success-color);"></i> Rekomendasi Pilihan Editor</h2>
+            <a href="catalog.html" class="btn btn-secondary btn-sm">Lihat Semua <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div id="recommendedComicsContainer" class="comics-grid">
+            <!-- Dirender secara dinamis oleh products.js -->
+        </div>
+    </section>
+
+    <!-- 7. FOOTER STOREFRONT -->
+    <footer class="store-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="store-logo" style="color: #ffffff; margin-bottom: 14px;">
+                    <div class="logo-badge"><i class="fas fa-book-open"></i></div>
+                    <span>GANBOOK SALES</span>
+                </div>
+                <p style="font-size: 0.88rem; line-height: 1.6; color: #94a3b8;">
+                    Toko komik fisik online terpercaya untuk penggemar Manga, Manhwa, dan Manhua. Menyediakan komik original berlisensi dengan pengiriman aman ke seluruh Nusantara.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Kategori Komik</h4>
+                <ul class="footer-links">
+                    <li><a href="catalog.html?type=Manga">Manga (Jepang)</a></li>
+                    <li><a href="catalog.html?type=Manhwa">Manhwa (Korea)</a></li>
+                    <li><a href="catalog.html?type=Manhua">Manhua (China)</a></li>
+                    <li><a href="catalog.html">Semua Katalog</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Layanan Pembeli</h4>
+                <ul class="footer-links">
+                    <li><a href="cart.html">Keranjang Belanja</a></li>
+                    <li><a href="checkout.html">Cara Pembayaran (QRIS / COD)</a></li>
+                    <li><a href="orders.html">Status & Riwayat Pesanan</a></li>
+                    <li><a href="login.html">Masuk ke Akun</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Hubungi Kami</h4>
+                <ul class="footer-links" style="color: #94a3b8;">
+                    <li><i class="fas fa-map-marker-alt"></i> Jakarta Barat, Indonesia</li>
+                    <li><i class="fas fa-phone-alt"></i> +62 812-3456-7890</li>
+                    <li><i class="fas fa-envelope"></i> support@ganbook.test</li>
+                    <li><i class="fas fa-clock"></i> Buka Setiap Hari (08:00 - 21:00 WIB)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 GANBOOK SALES. Seluruh hak cipta dilindungi undang-undang. Project Demonstrasi Uji Kompetensi BNSP Junior Web Developer.</p>
+        </div>
+    </footer>
+
+    <!-- Script Modul JavaScript -->
+    <script type="module">
+        import { initHomePage } from './js/products.js';
+        import { initStoreNavbar } from './js/script.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initStoreNavbar();
+            initHomePage();
+        });
+    </script>
+</body>
+</html>

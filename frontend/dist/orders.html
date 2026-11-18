@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!-- ==========================================================================
+         APLIKASI GANBOOK SALES - TOKO ONLINE KOMIK FISIK
+         Halaman: Riwayat Pesanan Pelanggan (Orders History Page)
+         Deskripsi: Menampilkan daftar riwayat pesanan komik yang dilakukan oleh pelanggan,
+                    status pembayaran, metode bayar (QRIS/COD), dan detail struk faktur.
+         ========================================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Pesanan - GanBook Sales</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Utama GanBook Sales -->
+  <script type="module" crossorigin src="/assets/orders-DbcnEaHF.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/script-Cjw_6am7.js">
+  <link rel="stylesheet" crossorigin href="/assets/script-DDq6NZ6v.css">
+</head>
+<body>
+
+    <!-- 1. HEADER & NAVBAR STOREFRONT -->
+    <header class="store-header">
+        <div class="store-nav-container">
+            <a href="index.html" class="store-logo">
+                <div class="logo-badge"><i class="fas fa-book-open"></i></div>
+                <span>GANBOOK SALES</span>
+            </a>
+
+            <ul class="store-nav-links">
+                <li><a href="index.html"><i class="fas fa-home"></i> Beranda</a></li>
+                <li><a href="catalog.html"><i class="fas fa-th-large"></i> Katalog Komik</a></li>
+            </ul>
+
+            <div class="store-nav-actions">
+                <a href="cart.html" class="nav-cart-btn" title="Keranjang Belanja">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="navCartCount" class="cart-count-badge" style="display: none;">0</span>
+                </a>
+
+                <div id="storeUserNav">
+                    <!-- Dirender dinamis -->
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. JUDUL HALAMAN RIWAYAT PESANAN -->
+    <div style="background-color: #ffffff; border-bottom: 1px solid var(--border-color); padding: 25px 20px;">
+        <div style="max-width: 1240px; margin: 0 auto;">
+            <h1 style="font-size: 1.6rem; font-weight: 800; color: var(--text-primary);">
+                <i class="fas fa-receipt" style="color: var(--primary-color);"></i> Riwayat Pesanan Komik Saya
+            </h1>
+            <p style="color: var(--text-secondary); font-size: 0.92rem; margin-top: 4px;">
+                Pantau status pengiriman, faktur pembelian, dan detail komik yang pernah Anda pesan.
+            </p>
+        </div>
+    </div>
+
+    <!-- 3. TABEL RIWAYAT PESANAN -->
+    <main class="section-wrapper" style="margin-top: 30px;">
+        <div class="card" style="padding: 24px;">
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">No</th>
+                            <th>No. Faktur</th>
+                            <th>Waktu Pesanan</th>
+                            <th>Item Komik</th>
+                            <th>Total Tagihan</th>
+                            <th>Metode Bayar</th>
+                            <th>Status Pesanan</th>
+                            <th style="width: 120px;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 30px;">Memuat riwayat pesanan...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- 4. MODAL STRUK FAKTUR PEMBELIAN (DETAIL) -->
+    <div id="orderDetailModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-invoice"></i> Bukti Faktur Pesanan</h3>
+                <button type="button" class="modal-close" onclick="document.getElementById('orderDetailModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body" id="orderModalReceiptContent">
+                <!-- Dirender secara dinamis oleh JavaScript -->
+            </div>
+            <div class="modal-footer" style="padding: 14px 20px; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-color);">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('orderDetailModal').classList.remove('active')">Tutup</button>
+                <button type="button" class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Cetak Struk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. FOOTER -->
+    <footer class="store-footer">
+        <div class="footer-bottom" style="margin-top: 0; text-align: center;">
+            <p>&copy; 2026 GANBOOK SALES - Layanan Pelanggan & Pengiriman Komik.</p>
+        </div>
+    </footer>
+
+    <!-- Script Modul JavaScript -->
+</body>
+</html>

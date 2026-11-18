@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <!-- ==========================================================================
+         APLIKASI GANBOOK SALES - TOKO ONLINE KOMIK FISIK
+         Halaman: Manajemen Penjualan & Laporan Transaksi (Admin)
+         Deskripsi: Dikelola oleh Administrator untuk memantau riwayat transaksi pesanan,
+                    mengubah status pesanan pelanggan, input transaksi penjualan baru,
+                    serta mencetak nota faktur penjualan komik.
+         ========================================================================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Penjualan - GanBook Sales</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- CSS Utama GanBook Sales -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- SIDEBAR (Navigasi Kiri Administrator) -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo-badge"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <h2 style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">GANBOOK</h2>
+                    <span style="font-size: 0.72rem; color: #93c5fd; text-transform: uppercase;">Admin Toko Komik</span>
+                </div>
+            </div>
+
+            <ul class="sidebar-menu">
+                <li class="menu-category">Menu Administrasi</li>
+                <li class="menu-item">
+                    <a href="dashboard.html"><i class="fas fa-chart-pie"></i> <span>Dashboard Utama</span></a>
+                </li>
+                <li class="menu-item">
+                    <a href="books.html"><i class="fas fa-book"></i> <span>Katalog Komik</span></a>
+                </li>
+                <li class="menu-item">
+                    <a href="categories.html"><i class="fas fa-tags"></i> <span>Kategori & Genre</span></a>
+                </li>
+
+                <li class="menu-category">Transaksi & Penjualan</li>
+                <li class="menu-item active">
+                    <a href="sales.html"><i class="fas fa-receipt"></i> <span>Manajemen Penjualan</span></a>
+                </li>
+
+                <li class="menu-category">Pengguna & Toko</li>
+                <li class="menu-item">
+                    <a href="users.html"><i class="fas fa-users"></i> <span>Daftar Pengguna</span></a>
+                </li>
+                <li class="menu-item">
+                    <a href="index.html" target="_blank"><i class="fas fa-store"></i> <span>Lihat Toko Online</span></a>
+                </li>
+            </ul>
+
+            <div style="padding: 16px; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <button type="button" id="btnAdminLogout" class="btn btn-danger btn-sm" style="width: 100%;">
+                    <i class="fas fa-sign-out-alt"></i> Keluar Sesi
+                </button>
+            </div>
+        </aside>
+
+        <!-- KONTEN UTAMA MANAJEMEN PENJUALAN -->
+        <div class="main-wrapper">
+            <header class="navbar">
+                <div>
+                    <h1 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary);">Manajemen Penjualan & Transaksi</h1>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary);">Pantau riwayat pesanan online, buat transaksi baru, dan kelola laporan penjualan</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span class="badge" style="background: #fef08a; color: #854d0e; padding: 6px 12px; font-size: 0.82rem; font-weight: 700;">
+                        <i class="fas fa-shield-alt"></i> <span id="adminNameDisplay">Administrator</span>
+                    </span>
+                </div>
+            </header>
+
+            <main class="content-area">
+                <!-- STATISTIK RINGKAS PENJUALAN TOKO -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+                    <div class="stat-card" style="padding: 18px 22px;">
+                        <div>
+                            <p style="font-size: 0.78rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Total Transaksi</p>
+                            <h3 id="statTotalSalesCount" style="font-size: 1.6rem; font-weight: 800; color: var(--text-primary);">0 Pesanan</h3>
+                        </div>
+                        <div class="stat-icon blue"><i class="fas fa-receipt"></i></div>
+                    </div>
+
+                    <div class="stat-card" style="padding: 18px 22px;">
+                        <div>
+                            <p style="font-size: 0.78rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Total Pendapatan</p>
+                            <h3 id="statTotalRevenue" style="font-size: 1.6rem; font-weight: 800; color: var(--success-color);">Rp 0</h3>
+                        </div>
+                        <div class="stat-icon green"><i class="fas fa-coins"></i></div>
+                    </div>
+
+                    <div class="stat-card" style="padding: 18px 22px;">
+                        <div>
+                            <p style="font-size: 0.78rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Komik Terjual</p>
+                            <h3 id="statTotalComicsSold" style="font-size: 1.6rem; font-weight: 800; color: var(--primary-color);">0 Volume</h3>
+                        </div>
+                        <div class="stat-icon purple"><i class="fas fa-book"></i></div>
+                    </div>
+                </div>
+
+                <!-- TOMBOL TAB KONTROL -->
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                    <button type="button" id="tabBtnHistory" class="btn btn-primary" style="padding: 10px 18px; font-weight: 700;">
+                        <i class="fas fa-list-ul"></i> Riwayat & Laporan Transaksi
+                    </button>
+                    <button type="button" id="tabBtnCreate" class="btn btn-secondary" style="padding: 10px 18px; font-weight: 700;">
+                        <i class="fas fa-plus-circle"></i> Buat Transaksi Penjualan Baru
+                    </button>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- SECTION 1: DAFTAR TRANSAKSI & LAPORAN PENJUALAN               -->
+                <!-- ============================================================== -->
+                <div id="sectionSalesHistory">
+                    <div class="card" style="padding: 20px; margin-bottom: 20px;">
+                        <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+                                <div>
+                                    <input type="text" id="searchSalesInput" class="form-control" placeholder="Cari No. Faktur / Nama..." style="width: 240px;">
+                                </div>
+                                <div>
+                                    <select id="filterOrderStatus" class="form-control" style="width: 170px;">
+                                        <option value="">Semua Status</option>
+                                        <option value="processing">Diproses</option>
+                                        <option value="completed">Selesai</option>
+                                        <option value="cancelled">Dibatalkan</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <select id="filterPaymentMethod" class="form-control" style="width: 170px;">
+                                        <option value="">Semua Metode</option>
+                                        <option value="qris">QRIS</option>
+                                        <option value="cod">COD</option>
+                                        <option value="tunai">Tunai</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="button" id="btnRefreshSales" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-sync-alt"></i> Muat Ulang
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card" style="padding: 24px;">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>No. Faktur</th>
+                                        <th>Pelanggan</th>
+                                        <th>Waktu</th>
+                                        <th>Volume</th>
+                                        <th>Total Belanja</th>
+                                        <th>Metode</th>
+                                        <th>Status Pesanan</th>
+                                        <th style="text-align: center;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="salesTableBody">
+                                    <tr>
+                                        <td colspan="8" style="text-align: center; padding: 25px;">Memuat data transaksi...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============================================================== -->
+                <!-- SECTION 2: FORMULIR INPUT TRANSAKSI PENJUALAN BARU             -->
+                <!-- ============================================================== -->
+                <div id="sectionCreateSale" style="display: none;">
+                    <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 24px; align-items: start;">
+                        <!-- KOLOM KIRI: PEMILIHAN PRODUK KOMIK -->
+                        <div>
+                            <div class="card" style="padding: 22px;">
+                                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                                    <i class="fas fa-book" style="color: var(--primary-color);"></i> Pilih Komik
+                                </h3>
+
+                                <div class="form-group">
+                                    <label for="posComicSelect" class="form-label">Judul Komik dari Database</label>
+                                    <select id="posComicSelect" class="form-control" style="font-size: 0.95rem;">
+                                        <option value="">-- Memuat Komik... --</option>
+                                    </select>
+                                    <div id="posComicInfo" style="margin-top: 6px; font-size: 0.85rem; color: var(--text-secondary);">
+                                        Pilih komik pada daftar di atas.
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="posQuantity" class="form-label">Jumlah Pembelian (Volume)</label>
+                                    <input type="number" id="posQuantity" class="form-control" min="1" value="1">
+                                </div>
+
+                                <button type="button" id="btnPosAddToCart" class="btn btn-primary" style="width: 100%; padding: 12px;">
+                                    <i class="fas fa-plus"></i> Tambah ke Transaksi
+                                </button>
+                            </div>
+
+                            <!-- IDENTITAS PEMBELI -->
+                            <div class="card" style="padding: 22px; margin-top: 20px;">
+                                <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                                    <i class="fas fa-user" style="color: var(--primary-color);"></i> Data Pembeli
+                                </h3>
+
+                                <div class="form-group">
+                                    <label for="posCustomerName" class="form-label">Nama Pembeli <span style="color: var(--danger-color);">*</span></label>
+                                    <input type="text" id="posCustomerName" class="form-control" placeholder="Contoh: Budi Pratama / Pembeli Langsung" value="Pembeli Toko">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="posCustomerPhone" class="form-label">Nomor WhatsApp / HP</label>
+                                    <input type="text" id="posCustomerPhone" class="form-control" placeholder="081234567890" value="081234567890">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="posCustomerAddress" class="form-label">Alamat / Catatan Lokasi</label>
+                                    <input type="text" id="posCustomerAddress" class="form-control" placeholder="Contoh: Pembelian langsung di toko fisik" value="Transaksi Toko GanBook">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KOLOM KANAN: RINGKASAN TRANSAKSI & PEMBAYARAN -->
+                        <div>
+                            <div class="card" style="padding: 22px;">
+                                <!-- Total Belanja Besar -->
+                                <div style="background: linear-gradient(135deg, #1d4ed8, #0284c7); color: #ffffff; border-radius: 12px; padding: 20px; text-align: right; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);">
+                                    <div style="font-size: 0.82rem; color: #bfdbfe; font-weight: 700; text-transform: uppercase;">Total Tagihan Penjualan</div>
+                                    <div id="posTotalDisplay" style="font-size: 2.2rem; font-weight: 900;">Rp 0</div>
+                                    <input type="hidden" id="posTotalHidden" value="0">
+                                </div>
+
+                                <!-- Tabel Item Belanja -->
+                                <h4 style="font-size: 0.95rem; margin-bottom: 10px; font-weight: 700;"><i class="fas fa-shopping-basket"></i> Daftar Item Komik</h4>
+                                <div class="table-responsive" style="margin-bottom: 18px; max-height: 240px; overflow-y: auto;">
+                                    <table class="data-table" style="font-size: 0.85rem;">
+                                        <thead>
+                                            <tr>
+                                                <th>Judul Komik</th>
+                                                <th>Harga</th>
+                                                <th>Qty</th>
+                                                <th>Subtotal</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="posCartTableBody">
+                                            <tr>
+                                                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 18px;">Belum ada komik yang dipilih.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Metode Pembayaran -->
+                                <div class="form-group">
+                                    <label for="posPaymentMethod" class="form-label">Metode Pembayaran</label>
+                                    <select id="posPaymentMethod" class="form-control">
+                                        <option value="tunai">Tunai / Cash</option>
+                                        <option value="qris">QRIS (QR Indonesian Standard)</option>
+                                        <option value="cod">COD (Bayar di Tempat)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Kalkulasi Uang Tunai & Kembalian -->
+                                <div id="boxCashCalc" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <label for="posCashInput" class="form-label">Uang Diterima (Rp)</label>
+                                        <input type="number" id="posCashInput" class="form-control" placeholder="Nominal uang...">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Kembalian</label>
+                                        <div id="posChangeDisplay" style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary); padding: 8px 0;">
+                                            Rp 0
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display: flex; gap: 10px;">
+                                    <button type="button" id="btnPosReset" class="btn btn-secondary" style="flex: 1;"><i class="fas fa-trash"></i> Reset</button>
+                                    <button type="button" id="btnPosCheckout" class="btn btn-success" style="flex: 2; padding: 12px; font-size: 1rem; font-weight: 700;">
+                                        <i class="fas fa-check-circle"></i> Simpan & Cetak Faktur
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL STRUK / NOTA PENJUALAN -->
+    <div id="receiptModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-invoice-dollar"></i> Faktur Penjualan GanBook Sales</h3>
+                <button type="button" class="modal-close" onclick="document.getElementById('receiptModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body" id="receiptContent"></div>
+            <div class="modal-footer" style="padding: 12px 20px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border-color);">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('receiptModal').classList.remove('active')">Tutup</button>
+                <button type="button" class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Cetak Faktur</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PERBARUI STATUS PESANAN (KHUSUS ADMIN) -->
+    <div id="updateStatusModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 440px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Perbarui Status Pesanan</h3>
+                <button type="button" class="modal-close" onclick="document.getElementById('updateStatusModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editStatusSaleId">
+                <div class="form-group">
+                    <label class="form-label">No. Faktur Pesanan</label>
+                    <input type="text" id="editStatusInvoice" class="form-control" readonly style="background: #f1f5f9; font-weight: 700;">
+                </div>
+
+                <div class="form-group">
+                    <label for="editOrderStatus" class="form-label">Status Pesanan</label>
+                    <select id="editOrderStatus" class="form-control">
+                        <option value="pending">Menunggu Konfirmasi (Pending)</option>
+                        <option value="processing">Sedang Diproses (Processing)</option>
+                        <option value="completed">Selesai (Completed)</option>
+                        <option value="cancelled">Dibatalkan (Cancelled)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editPaymentStatus" class="form-label">Status Pembayaran</label>
+                    <select id="editPaymentStatus" class="form-control">
+                        <option value="unpaid">Belum Dibayar (Unpaid)</option>
+                        <option value="paid">Lunas (Paid)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 12px 20px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid var(--border-color);">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('updateStatusModal').classList.remove('active')">Batal</button>
+                <button type="button" id="btnSaveStatusChange" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Modul JavaScript -->
+    <script type="module">
+        import { apiRequest, formatRupiah, formatDate, requireRole, clearAuthSession, getAuthUser } from './js/script.js';
+
+        // State lokal
+        let allSalesList = [];
+        let availableComics = [];
+        let adminCart = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Guard: Hanya Administrator yang diizinkan mengakses halaman Manajemen Penjualan
+            if (!requireRole(['admin'])) return;
+
+            const user = getAuthUser();
+            if (user) {
+                document.getElementById('adminNameDisplay').textContent = user.name;
+            }
+
+            // Tombol Logout Admin
+            document.getElementById('btnAdminLogout')?.addEventListener('click', async () => {
+                if (confirm('Keluar dari sesi Administrator?')) {
+                    try { await apiRequest('/logout', 'POST'); } catch (e) {}
+                    clearAuthSession();
+                    window.location.href = 'login.html';
+                }
+            });
+
+            // Navigasi Tab (Riwayat vs Buat Baru)
+            setupTabs();
+
+            // Muat data awal
+            await loadSales();
+            await loadComics();
+
+            // Event Listeners Filter
+            document.getElementById('searchSalesInput')?.addEventListener('input', applyFilters);
+            document.getElementById('filterOrderStatus')?.addEventListener('change', applyFilters);
+            document.getElementById('filterPaymentMethod')?.addEventListener('change', applyFilters);
+            document.getElementById('btnRefreshSales')?.addEventListener('click', loadSales);
+
+            // Event Listeners Form Penjualan Baru
+            document.getElementById('posComicSelect')?.addEventListener('change', onComicSelectChange);
+            document.getElementById('btnPosAddToCart')?.addEventListener('click', onAddPosCart);
+            document.getElementById('posCashInput')?.addEventListener('input', calculatePosChange);
+            document.getElementById('posPaymentMethod')?.addEventListener('change', (e) => {
+                const isCash = e.target.value === 'tunai';
+                document.getElementById('boxCashCalc').style.display = isCash ? 'grid' : 'none';
+            });
+            document.getElementById('btnPosReset')?.addEventListener('click', resetPos);
+            document.getElementById('btnPosCheckout')?.addEventListener('click', onCheckoutPos);
+
+            // Simpan status pesanan
+            document.getElementById('btnSaveStatusChange')?.addEventListener('click', onSaveStatusChange);
+        });
+
+        // ==========================================
+        // BAGIAN 1: PENGELOLAAN TAB TRANSAKSI
+        // Beralih tampilan antara tab Riwayat Pesanan dan tab Input Transaksi Baru.
+        // ==========================================
+        function setupTabs() {
+            const tabBtnHistory = document.getElementById('tabBtnHistory');
+            const tabBtnCreate = document.getElementById('tabBtnCreate');
+            const sectionHistory = document.getElementById('sectionSalesHistory');
+            const sectionCreate = document.getElementById('sectionCreateSale');
+
+            tabBtnHistory.addEventListener('click', () => {
+                tabBtnHistory.className = 'btn btn-primary';
+                tabBtnCreate.className = 'btn btn-secondary';
+                sectionHistory.style.display = 'block';
+                sectionCreate.style.display = 'none';
+            });
+
+            tabBtnCreate.addEventListener('click', () => {
+                tabBtnCreate.className = 'btn btn-primary';
+                tabBtnHistory.className = 'btn btn-secondary';
+                sectionCreate.style.display = 'block';
+                sectionHistory.style.display = 'none';
+            });
+        }
+
+        // ==========================================
+        // BAGIAN 2: DATA TRANSAKSI & LAPORAN PENJUALAN
+        // Mengambil daftar pesanan dari backend, menghitung total omzet pendapatan, dan merender tabel.
+        // ==========================================
+        async function loadSales() {
+            const res = await apiRequest('/sales');
+            if (res.ok && res.data.success) {
+                allSalesList = res.data.data;
+                updateStatsCards(allSalesList);
+                renderSalesTable(allSalesList);
+            }
+        }
+
+        function updateStatsCards(sales) {
+            const totalCount = sales.length;
+            const totalRevenue = sales.reduce((acc, s) => acc + Number(s.total_price), 0);
+            const totalComics = sales.reduce((acc, s) => acc + Number(s.total_items), 0);
+
+            document.getElementById('statTotalSalesCount').textContent = `${totalCount} Pesanan`;
+            document.getElementById('statTotalRevenue').textContent = formatRupiah(totalRevenue);
+            document.getElementById('statTotalComicsSold').textContent = `${totalComics} Volume`;
+        }
+
+        function renderSalesTable(sales) {
+            const tableBody = document.getElementById('salesTableBody');
+            if (!tableBody) return;
+
+            if (sales.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">Tidak ada data transaksi yang sesuai.</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = sales.map(s => {
+                const statusBadge = s.order_status === 'completed'
+                    ? `<span class="badge badge-success"><i class="fas fa-check-circle"></i> Selesai</span>`
+                    : (s.order_status === 'processing'
+                        ? `<span class="badge badge-info"><i class="fas fa-shipping-fast"></i> Diproses</span>`
+                        : (s.order_status === 'cancelled'
+                            ? `<span class="badge badge-danger"><i class="fas fa-times-circle"></i> Batal</span>`
+                            : `<span class="badge badge-warning"><i class="fas fa-clock"></i> Pending</span>`));
+
+                const payBadge = s.payment_method === 'qris'
+                    ? `<span class="badge" style="background: #e0f2fe; color: #0369a1;"><i class="fas fa-qrcode"></i> QRIS</span>`
+                    : (s.payment_method === 'cod'
+                        ? `<span class="badge" style="background: #fef3c7; color: #92400e;"><i class="fas fa-truck"></i> COD</span>`
+                        : `<span class="badge" style="background: #f1f5f9; color: #334155;"><i class="fas fa-money-bill-wave"></i> Tunai</span>`);
+
+                return `
+                    <tr>
+                        <td><strong>#${s.invoice_number}</strong></td>
+                        <td>
+                            <div><strong>${s.customer_name}</strong></div>
+                            <small class="text-muted">${s.customer_phone || '-'}</small>
+                        </td>
+                        <td>${formatDate(s.sale_date)}</td>
+                        <td><span class="badge badge-info">${s.total_items} komik</span></td>
+                        <td><strong>${formatRupiah(s.total_price)}</strong></td>
+                        <td>${payBadge}</td>
+                        <td>${statusBadge}</td>
+                        <td style="text-align: center;">
+                            <div style="display: flex; gap: 6px; justify-content: center;">
+                                <button class="btn btn-secondary btn-sm" onclick="window.viewReceipt(${s.id})" title="Lihat Faktur">
+                                    <i class="fas fa-file-invoice"></i>
+                                </button>
+                                <button class="btn btn-primary btn-sm" onclick="window.openStatusModal(${s.id}, '${s.invoice_number}', '${s.order_status}', '${s.payment_status}')" title="Ubah Status">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function applyFilters() {
+            const query = document.getElementById('searchSalesInput')?.value.toLowerCase().trim() || '';
+            const status = document.getElementById('filterOrderStatus')?.value || '';
+            const method = document.getElementById('filterPaymentMethod')?.value || '';
+
+            const filtered = allSalesList.filter(s => {
+                const matchQuery = !query ||
+                    s.invoice_number.toLowerCase().includes(query) ||
+                    s.customer_name.toLowerCase().includes(query);
+                const matchStatus = !status || s.order_status === status;
+                const matchMethod = !method || s.payment_method === method;
+
+                return matchQuery && matchStatus && matchMethod;
+            });
+
+            renderSalesTable(filtered);
+        }
+
+        // ==========================================
+        // BAGIAN 3: MODAL UBAH STATUS PESANAN (ADMIN)
+        // Memperbarui status pesanan (diproses, selesai, batal) dan status lunas pembayaran.
+        // ==========================================
+        window.openStatusModal = (id, invoice, orderStatus, payStatus) => {
+            document.getElementById('editStatusSaleId').value = id;
+            document.getElementById('editStatusInvoice').value = '#' + invoice;
+            document.getElementById('editOrderStatus').value = orderStatus || 'processing';
+            document.getElementById('editPaymentStatus').value = payStatus || 'unpaid';
+            document.getElementById('updateStatusModal').classList.add('active');
+        };
+
+        async function onSaveStatusChange() {
+            const id = document.getElementById('editStatusSaleId').value;
+            const order_status = document.getElementById('editOrderStatus').value;
+            const payment_status = document.getElementById('editPaymentStatus').value;
+
+            const res = await apiRequest(`/sales/${id}/status`, 'PATCH', { order_status, payment_status });
+            if (res.ok && res.data.success) {
+                alert('Status pesanan berhasil diperbarui!');
+                document.getElementById('updateStatusModal').classList.remove('active');
+                await loadSales();
+            } else {
+                alert(res.data?.message || 'Gagal memperbarui status pesanan.');
+            }
+        }
+
+        // ==========================================
+        // BAGIAN 4: PEMBUATAN TRANSAKSI PENJUALAN BARU
+        // Memilih komik, menghitung nominal kembalian kasir, dan mengirim pesanan ke API Laravel.
+        // ==========================================
+        async function loadComics() {
+            const res = await apiRequest('/books');
+            if (res.ok && res.data.success) {
+                availableComics = res.data.data;
+                const select = document.getElementById('posComicSelect');
+                if (!select) return;
+                select.innerHTML = '<option value="">-- Pilih Judul Komik --</option>' +
+                    availableComics.map(c => `
+                        <option value="${c.id}" data-price="${c.price}" data-stock="${c.stock}">
+                            [${c.comic_type}] ${c.title} (Sisa: ${c.stock}) - ${formatRupiah(c.price)}
+                        </option>
+                    `).join('');
+            }
+        }
+
+        function onComicSelectChange() {
+            const select = document.getElementById('posComicSelect');
+            const info = document.getElementById('posComicInfo');
+            const opt = select.options[select.selectedIndex];
+            if (!opt || !opt.value) {
+                info.textContent = 'Pilih komik pada daftar di atas.';
+                return;
+            }
+            const price = opt.getAttribute('data-price');
+            const stock = opt.getAttribute('data-stock');
+            info.innerHTML = `Harga: <strong>${formatRupiah(price)}</strong> | Sisa Stok Fisik: <strong>${stock} volume</strong>`;
+        }
+
+        function onAddPosCart() {
+            const select = document.getElementById('posComicSelect');
+            const comicId = Number(select.value);
+            const qty = Number(document.getElementById('posQuantity').value) || 1;
+
+            if (!comicId) {
+                alert('Silakan pilih komik terlebih dahulu!');
+                return;
+            }
+
+            const comic = availableComics.find(c => c.id === comicId);
+            if (!comic) return;
+
+            const existing = adminCart.find(x => x.id === comic.id);
+            const curQty = existing ? existing.quantity : 0;
+            const newQty = curQty + qty;
+
+            if (newQty > comic.stock) {
+                alert(`Stok komik tidak mencukupi! Sisa stok tersedia: ${comic.stock}`);
+                return;
+            }
+
+            if (existing) {
+                existing.quantity = newQty;
+            } else {
+                adminCart.push({
+                    id: comic.id,
+                    title: comic.title,
+                    price: comic.price,
+                    stock: comic.stock,
+                    quantity: qty
+                });
+            }
+
+            select.value = '';
+            document.getElementById('posQuantity').value = 1;
+            document.getElementById('posComicInfo').textContent = 'Pilih komik pada daftar di atas.';
+            renderPosCart();
+        }
+
+        function renderPosCart() {
+            const tableBody = document.getElementById('posCartTableBody');
+            const totalDisplay = document.getElementById('posTotalDisplay');
+            const totalHidden = document.getElementById('posTotalHidden');
+
+            if (!tableBody) return;
+
+            if (adminCart.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 18px;">Belum ada komik yang dipilih.</td></tr>`;
+                totalDisplay.textContent = 'Rp 0';
+                totalHidden.value = 0;
+                calculatePosChange();
+                return;
+            }
+
+            let total = 0;
+            tableBody.innerHTML = adminCart.map((item, idx) => {
+                const sub = item.price * item.quantity;
+                total += sub;
+                return `
+                    <tr>
+                        <td><strong>${item.title}</strong></td>
+                        <td>${formatRupiah(item.price)}</td>
+                        <td style="width: 80px;">
+                            <input type="number" min="1" max="${item.stock}" value="${item.quantity}" class="form-control" style="padding: 2px 6px;" onchange="window.updateAdminItemQty(${idx}, this.value)">
+                        </td>
+                        <td><strong>${formatRupiah(sub)}</strong></td>
+                        <td style="width: 40px;">
+                            <button class="btn btn-danger btn-sm" onclick="window.removeAdminItem(${idx})"><i class="fas fa-times"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            totalDisplay.textContent = formatRupiah(total);
+            totalHidden.value = total;
+            calculatePosChange();
+        }
+
+        window.updateAdminItemQty = (idx, val) => {
+            const qty = parseInt(val, 10);
+            if (isNaN(qty) || qty <= 0) {
+                adminCart.splice(idx, 1);
+            } else {
+                const item = adminCart[idx];
+                item.quantity = qty > item.stock ? item.stock : qty;
+            }
+            renderPosCart();
+        };
+
+        window.removeAdminItem = (idx) => {
+            adminCart.splice(idx, 1);
+            renderPosCart();
+        };
+
+        function calculatePosChange() {
+            const total = Number(document.getElementById('posTotalHidden')?.value) || 0;
+            const cash = Number(document.getElementById('posCashInput')?.value) || 0;
+            const changeDisplay = document.getElementById('posChangeDisplay');
+
+            if (!changeDisplay) return;
+
+            if (cash > 0) {
+                const change = cash - total;
+                if (change >= 0) {
+                    changeDisplay.textContent = formatRupiah(change);
+                    changeDisplay.style.color = 'var(--success-color)';
+                } else {
+                    changeDisplay.textContent = `Kurang ${formatRupiah(Math.abs(change))}`;
+                    changeDisplay.style.color = 'var(--danger-color)';
+                }
+            } else {
+                changeDisplay.textContent = 'Rp 0';
+                changeDisplay.style.color = 'var(--text-primary)';
+            }
+        }
+
+        function resetPos() {
+            adminCart = [];
+            document.getElementById('posCustomerName').value = 'Pembeli Toko';
+            document.getElementById('posCustomerPhone').value = '081234567890';
+            document.getElementById('posCustomerAddress').value = 'Transaksi Toko GanBook';
+            document.getElementById('posCashInput').value = '';
+            renderPosCart();
+        }
+
+        async function onCheckoutPos() {
+            if (adminCart.length === 0) {
+                alert('Daftar komik transaksi masih kosong!');
+                return;
+            }
+
+            const total = Number(document.getElementById('posTotalHidden').value);
+            const method = document.getElementById('posPaymentMethod').value;
+            let cash = Number(document.getElementById('posCashInput').value);
+
+            if (method === 'tunai') {
+                if (!cash || cash < total) {
+                    alert('Nominal uang tunai tidak mencukupi total belanja!');
+                    return;
+                }
+            } else {
+                cash = total;
+            }
+
+            const customerName = document.getElementById('posCustomerName').value.trim() || 'Pembeli Toko';
+            const customerPhone = document.getElementById('posCustomerPhone').value.trim() || '081234567890';
+            const customerAddress = document.getElementById('posCustomerAddress').value.trim() || 'Transaksi Toko GanBook';
+
+            const payload = {
+                customer_name: customerName,
+                customer_phone: customerPhone,
+                customer_address: customerAddress,
+                payment_method: method,
+                notes: 'Transaksi penjualan langsung via Sistem Admin GanBook Sales',
+                items: adminCart.map(i => ({ book_id: i.id, quantity: i.quantity }))
+            };
+
+            const btn = document.getElementById('btnPosCheckout');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan Transaksi...';
+
+            const res = await apiRequest('/sales', 'POST', payload);
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> Simpan & Cetak Faktur';
+
+            if (res.ok && res.data.success) {
+                const sale = res.data.data;
+                showReceipt(sale, cash, cash - total);
+                resetPos();
+                await loadComics();
+                await loadSales();
+            } else {
+                alert(res.data?.message || 'Gagal memproses transaksi penjualan.');
+            }
+        }
+
+        // ==========================================
+        // BAGIAN 5: NOTA / FAKTUR PENJUALAN
+        // Menampilkan struk faktur rincian komik yang dibeli dan opsi cetak nota transaksi.
+        // ==========================================
+        function showReceipt(sale, cash = null, change = null) {
+            const modal = document.getElementById('receiptModal');
+            const content = document.getElementById('receiptContent');
+            if (!modal || !content) return;
+
+            const details = sale.sale_details || [];
+            const finalCash = cash !== null ? cash : sale.total_price;
+            const finalChange = change !== null ? change : 0;
+
+            content.innerHTML = `
+                <div style="font-family: 'Courier New', Courier, monospace; background: #fff; padding: 14px; border: 1px dashed #cbd5e1; border-radius: 6px;">
+                    <div style="text-align: center; border-bottom: 1px dashed #94a3b8; padding-bottom: 10px; margin-bottom: 10px;">
+                        <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800;">GANBOOK SALES STORE</h3>
+                        <p style="font-size: 0.8rem; color: #475569; margin: 2px 0;">Pusat Komik Fisik: Manga, Manhwa & Manhua</p>
+                        <p style="font-size: 0.78rem; margin: 4px 0 0;">No. Faktur: <strong>#${sale.invoice_number}</strong></p>
+                        <p style="font-size: 0.78rem; margin: 0;">Waktu: ${formatDate(sale.sale_date)}</p>
+                        <p style="font-size: 0.78rem; margin: 0;">Pelanggan: <strong>${sale.customer_name}</strong></p>
+                    </div>
+
+                    <div style="border-bottom: 1px dashed #94a3b8; padding-bottom: 8px; margin-bottom: 8px; font-size: 0.82rem;">
+                        ${details.map(d => `
+                            <div style="margin-bottom: 5px;">
+                                <div><strong>${d.book ? d.book.title : 'Komik'}</strong></div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>${d.quantity} x ${formatRupiah(d.unit_price)}</span>
+                                    <span>${formatRupiah(d.subtotal)}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 0.95rem; margin-bottom: 4px;">
+                        <span>TOTAL TAGIHAN:</span>
+                        <span>${formatRupiah(sale.total_price)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span>Metode Bayar:</span>
+                        <span style="text-transform: uppercase;"><strong>${sale.payment_method}</strong></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span>Status Pembayaran:</span>
+                        <span><strong>${sale.payment_status.toUpperCase()}</strong></span>
+                    </div>
+                    ${sale.payment_method === 'tunai' ? `
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-top: 4px;">
+                            <span>Uang Diterima:</span>
+                            <span>${formatRupiah(finalCash)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: bold; color: var(--success-color);">
+                            <span>Kembalian:</span>
+                            <span>${formatRupiah(finalChange)}</span>
+                        </div>
+                    ` : ''}
+
+                    <div style="text-align: center; margin-top: 14px; font-size: 0.75rem; color: #64748b;">
+                        <p>Terima kasih atas pesanan Anda di GanBook Sales!</p>
+                        <p>Dokumentasi resmi kompetensi Junior Web Developer BNSP.</p>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        window.viewReceipt = async (id) => {
+            const res = await apiRequest(`/sales/${id}`);
+            if (res.ok && res.data.success) {
+                showReceipt(res.data.data, res.data.data.total_price, 0);
+            }
+        };
+    </script>
+</body>
+</html>
